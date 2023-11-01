@@ -9,9 +9,7 @@ import Product from "./models/productModel.js";
 
 const app = express();
 app.use(cors());
-
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -27,9 +25,6 @@ mongoose.connect('mongodb+srv://amazona:amazona@cluster0.zovzr.mongodb.net/amazo
   });
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
-    
- 
-
   socket.on("getproduct", (data) => {
             console.log("có kết nối");
             
@@ -37,10 +32,8 @@ io.on("connection", (socket) => {
       Product.find({})
       .then((documents) => {
         if (Array.isArray(documents)) {
-          
         io.sockets.emit("productData",documents)
-          //  console.log(documents);
-            
+        console.log("lấy dl");
         } else {
           console.error('Dữ liệu trả về không phải là mảng');
         }
@@ -53,8 +46,6 @@ io.on("connection", (socket) => {
     }
    
   });
-
- 
   socket.on('updateProduct', async (data) => {
     console.log("kết nối update");
     try {
@@ -76,7 +67,6 @@ io.on("connection", (socket) => {
     }
    
   });
-
   socket.on('deleteProduct', async (productId) => {
     console.log('có người muốn xoá');
     try {
@@ -86,6 +76,8 @@ io.on("connection", (socket) => {
       socket.emit('productDeleteError', { error: 'Lỗi xóa sản phẩm.' });
     }
   });
+
+  
   
 });
 
